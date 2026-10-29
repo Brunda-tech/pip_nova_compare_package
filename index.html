@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pip &amp; Nova – Which Intel chip is yours?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#eaf4ff;--card:#fff;--ink:#12305a;--mute:#5b7394;--blue:#0068b5;--pip:#2bbf9b;--pipbg:#dcf8ef;--nova:#7a5cff;--novabg:#ebe5ff;--line:#cfe0f5;--shadow:0 6px 0 #cfe0f5}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#0c1a30;--card:#14284a;--ink:#e8f1ff;--mute:#9db4d6;--blue:#4aa8ff;--pip:#3fe0b8;--pipbg:#12403a;--nova:#a692ff;--novabg:#2b2459;--line:#254270;--shadow:0 6px 0 #0a1730}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0c1a30;--card:#14284a;--ink:#e8f1ff;--mute:#9db4d6;--blue:#4aa8ff;--pip:#3fe0b8;--pipbg:#12403a;--nova:#a692ff;--novabg:#2b2459;--line:#254270;--shadow:0 6px 0 #0a1730}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:60px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Fredoka',system-ui,sans-serif;line-height:1.45}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--bg);display:flex;gap:6px;padding:8px 12px;overflow-x:auto;border-bottom:2px solid var(--line)}
+nav a{white-space:nowrap;text-decoration:none;color:var(--ink);background:var(--card);border-radius:99px;padding:5px 12px;font-size:14px;border:2px solid var(--line)}
+section{max-width:860px;margin:0 auto;padding:36px 16px}
+h1{font-size:clamp(32px,8vw,56px);line-height:1.05;margin:8px 0}h2{font-size:28px;margin:0 0 4px}
+.sub{color:var(--mute);margin:0 0 18px}.hero{text-align:center;padding-top:28px}
+.hero .tag{display:inline-block;background:var(--blue);color:#fff;border-radius:99px;padding:4px 14px;font-size:14px}
+.pair{display:flex;justify-content:center;gap:10px;margin:14px 0}
+.btn{font:inherit;font-weight:600;background:var(--blue);color:#fff;border:0;border-radius:16px;padding:12px 22px;cursor:pointer;box-shadow:0 5px 0 rgba(0,0,0,.22);transition:transform .1s}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,.22)}
+.btn.pip{background:var(--pip);color:#06352b}.btn.nova{background:var(--nova);color:#fff}.btn.ghost{background:var(--card);color:var(--ink);border:2px solid var(--line);box-shadow:var(--shadow)}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.card{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:16px;box-shadow:var(--shadow)}
+.card.p{background:var(--pipbg)}.card.n{background:var(--novabg)}
+.card h3{margin:6px 0}.chip{display:inline-block;border-radius:99px;padding:2px 10px;font-size:13px;background:var(--card);margin:2px}
+.mascot{width:96px;height:96px;display:block;margin:0 auto;animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-6px)}}
+@media (prefers-reduced-motion:reduce){.mascot{animation:none}}
+.dna{display:flex;flex-wrap:wrap;gap:10px}.dna button{font:inherit;background:var(--card);color:var(--ink);border:2px solid var(--line);border-radius:18px;padding:10px 14px;cursor:pointer;box-shadow:var(--shadow);text-align:left;max-width:100%}
+.dna button.on{border-color:var(--blue);background:var(--card)}.dna small{display:block;color:var(--mute);margin-top:4px}
+.bar{margin:12px 0}.bar .l{display:flex;justify-content:space-between;font-size:14px}
+.track{height:16px;background:var(--line);border-radius:99px;overflow:hidden;margin:3px 0}
+.fill{height:100%;border-radius:99px;transition:width .8s cubic-bezier(.2,.9,.3,1.2)}
+.fp{background:var(--pip)}.fn{background:var(--nova)}
+input[type=range]{width:100%;accent-color:var(--blue)}
+.verdict{display:grid;gap:10px;grid-template-columns:1fr 1fr;margin-top:12px}.verdict div{border-radius:16px;padding:10px;font-size:14px}
+.verdict .p{background:var(--pipbg)}.verdict .n{background:var(--novabg)}
+.play{text-align:center}.task{font-size:22px;margin:12px 0;min-height:64px}
+.lanes{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.lanes .btn{padding:12px 6px;font-size:14px}
+.fb{min-height:48px;margin-top:12px;font-size:15px}.score{color:var(--mute)}
+.opt{display:block;width:100%;text-align:left;font:inherit;color:var(--ink);background:var(--card);border:2px solid var(--line);border-radius:16px;padding:12px;margin:8px 0;cursor:pointer;box-shadow:var(--shadow)}
+.opt:hover{border-color:var(--blue)}
+.prog{height:10px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:14px}.prog i{display:block;height:100%;background:var(--blue);transition:width .4s}
+.res{text-align:center}.res ul{text-align:left;padding-left:20px}
+.meter{position:relative;height:18px;border-radius:99px;background:linear-gradient(90deg,var(--pip),var(--blue),var(--nova));margin:18px 0 6px}
+.meter b{position:absolute;top:-8px;width:34px;height:34px;margin-left:-17px;background:var(--card);border:3px solid var(--ink);border-radius:50%;display:grid;place-items:center;font-size:16px;transition:left .9s cubic-bezier(.2,.9,.3,1.3)}
+
+/* Refreshed comparison section */
+#compare{max-width:1000px}
+.compare-intro{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px}
+.compare-intro .sub{max-width:560px;margin:8px 0 0}
+.compare-kicker{display:inline-flex;align-items:center;gap:7px;background:var(--card);border:1px solid var(--line);border-radius:99px;padding:5px 11px;color:var(--mute);font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.compare-shell{padding:clamp(14px,3vw,26px);border-radius:28px;background:var(--card);border:1px solid var(--line);box-shadow:0 12px 34px rgba(18,48,90,.08)}
+.compare-head{display:grid;grid-template-columns:minmax(130px,1fr) minmax(0,1.15fr) minmax(0,1.15fr);gap:12px;align-items:stretch;margin-bottom:18px}
+.compare-head .chip-head{border-radius:20px;padding:14px;background:var(--bg);border:1px solid var(--line);text-align:center}
+.compare-head .chip-head.pip-head{background:var(--pipbg);border-color:color-mix(in srgb,var(--pip) 35%,var(--line))}
+.compare-head .chip-head.nova-head{background:var(--novabg);border-color:color-mix(in srgb,var(--nova) 35%,var(--line))}
+.chip-head .emoji{font-size:26px;display:block;margin-bottom:4px}
+.chip-head strong{display:block;font-size:16px}
+.chip-head small{display:block;color:var(--mute);font-size:12px;margin-top:3px}
+.compare-row{display:grid;grid-template-columns:minmax(130px,1fr) minmax(0,1.15fr) minmax(0,1.15fr);gap:12px;align-items:center;padding:15px 0;border-top:1px solid var(--line)}
+.compare-label{font-weight:600;font-size:14px}.compare-label small{display:block;color:var(--mute);font-size:12px;font-weight:400;margin-top:3px}
+.compare-value{min-width:0}.compare-value .value-line{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:7px;font-size:14px;font-weight:600}
+.compare-value .value-line small{font-size:11px;color:var(--mute);font-weight:500}
+.compare-track{height:9px;background:var(--line);border-radius:99px;overflow:hidden}
+.compare-fill{height:100%;width:0;border-radius:99px;transition:width .75s cubic-bezier(.2,.9,.3,1.1)}
+.compare-fill.pip-fill{background:var(--pip)}.compare-fill.nova-fill{background:var(--nova)}
+.compare-note{margin:18px 0 0;padding:13px 15px;background:var(--bg);border-radius:16px;color:var(--mute);font-size:13px}
+.day-card{margin-top:22px;padding:clamp(16px,3vw,24px);border-radius:26px;border:1px solid var(--line);background:var(--card);box-shadow:0 12px 34px rgba(18,48,90,.06)}
+.day-top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:14px}
+.day-top h3{margin:0;font-size:20px}.day-top p{margin:4px 0 0;color:var(--mute);font-size:13px}
+.day-step{font-size:12px;color:var(--mute);background:var(--bg);border:1px solid var(--line);padding:5px 10px;border-radius:99px;white-space:nowrap}
+#lvl{margin:8px 0 12px;cursor:pointer}
+.level-labels{display:flex;justify-content:space-between;color:var(--mute);font-size:11px;margin-top:-4px}
+.verdict{gap:12px;margin-top:20px}.verdict div{padding:15px;border:1px solid var(--line);border-radius:18px;font-size:14px}
+.verdict .p{border-color:color-mix(in srgb,var(--pip) 40%,var(--line))}.verdict .n{border-color:color-mix(in srgb,var(--nova) 40%,var(--line))}
+@media(max-width:600px){.compare-intro{display:block}.compare-head,.compare-row{grid-template-columns:minmax(88px,.75fr) minmax(0,1fr) minmax(0,1fr);gap:7px}.compare-head .chip-head{padding:10px 5px;border-radius:15px}.chip-head strong{font-size:13px}.chip-head small{font-size:10px}.compare-label{font-size:12px}.compare-label small{font-size:10px}.compare-value .value-line{font-size:12px}.compare-value .value-line small{display:none}.compare-shell{padding:12px}.compare-row{padding:13px 0}.verdict{grid-template-columns:1fr}.day-top{display:block}.day-step{display:inline-block;margin-top:8px}}
+
+.hidden{display:none}footer{max-width:860px;margin:0 auto;padding:24px 16px 48px;color:var(--mute);font-size:13px;text-align:center}
+@media (max-width:480px){.verdict{grid-template-columns:1fr}}
+</style></head><body>
+<nav><a href="#top">Hello</a><a href="#meet">Meet</a><a href="#dna">Same DNA</a><a href="#game">Game</a><a href="#compare">Compare</a><a href="#quiz">Quiz</a></nav>
+
+<section class="hero" id="top">
+ <span class="tag">Intel 18A · Core Ultra Series 3 &amp; Core Series 3</span>
+ <h1>Two chips.<br>One family.<br>Zero losers. 💙</h1>
+ <p class="sub">Meet Pip and Nova. Both are built on Intel 18A and both are smart, but they’re made for different days. Let’s find out which one is yours.</p>
+ <div class="pair" id="heroPair"></div>
+ <button class="btn" onclick="go('meet')">Let’s explore ↓</button>
+</section>
+
+<section id="meet">
+ <h2>Meet the family</h2><p class="sub">Tap a card to see who they’re made for.</p>
+ <div class="grid">
+  <div class="card p"><div class="mascotbox" data-m="pip"></div><h3>Pip · Intel Core Series 3</h3><p><i>“Wildcat Lake”</i> – modern computing and right-sized AI for price-sensitive laptops.</p><div id="pipMore" class="hidden"><span class="chip">Up to 6 cores (2 P + 4 LPE)</span><span class="chip">Up to 2 Xe3 GPU cores</span><span class="chip">NPU up to 17 TOPS</span><span class="chip">~40 platform TOPS</span><p>Perfect for: students, everyday work, streaming, calls, light creativity, long days away from the charger.</p></div><button class="btn pip" onclick="tog('pipMore',this)">Who’s Pip for?</button></div>
+  <div class="card n"><div class="mascotbox" data-m="nova"></div><h3>Nova · Intel Core Ultra Series 3</h3><p><i>“Panther Lake”</i> – built for demanding creation, gaming, productivity and AI.</p><div id="novaMore" class="hidden"><span class="chip">Up to 16 cores (4 P + 8 E + 4 LPE)</span><span class="chip">Up to 12 Xe3 GPU cores</span><span class="chip">NPU up to 50 TOPS</span><span class="chip">Up to ~180 platform TOPS</span><p>Perfect for: creators, gamers, developers, power multitaskers and anyone running heavy AI.</p></div><button class="btn nova" onclick="tog('novaMore',this)">Who’s Nova for?</button></div>
+ </div>
+</section>
+
+<section id="dna">
+ <h2>What they share 🧬</h2><p class="sub">Different sizes, same DNA. Tap each to find out.</p>
+ <div class="dna" id="dnaList"></div>
+</section>
+
+<section id="game" class="play">
+ <h2>Game: Whose lane? 🚦</h2><p class="sub">Send each task to the chip that fits best. Some are for both!</p>
+ <div class="card">
+  <div class="score" id="gScore"></div><div class="task" id="gTask"></div>
+  <div class="lanes"><button class="btn pip" onclick="pick('p')">🌱 Pip</button><button class="btn ghost" onclick="pick('b')">🤝 Both</button><button class="btn nova" onclick="pick('n')">🚀 Nova</button></div>
+  <div class="fb" id="gFb"></div>
+ </div>
+</section>
+
+<section id="compare">
+ <div class="compare-intro">
+  <div><span class="compare-kicker">⚖️ Quick comparison</span><h2 style="margin-top:10px">Two chips. Side by side.</h2><p class="sub">Compare the top configurations at a glance. More power is useful only when your day needs it.</p></div>
+ </div>
+ <div class="compare-shell" id="bars" aria-label="Pip and Nova specification comparison"></div>
+ <div class="day-card">
+  <div class="day-top"><div><h3>How demanding is your day?</h3><p>Move the slider to see which chip fits your workload.</p></div><span class="day-step" id="dayStep">Everyday</span></div>
+  <input type="range" min="0" max="4" value="0" id="lvl" aria-label="How demanding is your day">
+  <div class="level-labels"><span>Everyday</span><span>Power user</span></div>
+  <div id="lvlName" style="font-weight:600;margin:12px 0 0"></div>
+  <div class="verdict"><div class="p" id="vp"></div><div class="n" id="vn"></div></div>
+ </div>
+</section>
+
+<section id="quiz">
+ <h2>Which one is yours? 🔮</h2><p class="sub">Five quick questions. No wrong answers.</p>
+ <div class="card" id="qbox"></div>
+</section>
+
+<footer>Specs are “up to” figures for top configurations from Intel launch coverage (CES 2026 and April 2026). Platform TOPS combines CPU, GPU and NPU. Core Series 3 NPUs fall below the 40 NPU TOPS Microsoft requires for Copilot+ PC; Core Ultra Series 3 can meet it. A fan-made student project, not an official Intel site.</footer>
+
+<script>
+const $=id=>document.getElementById(id);
+const go=id=>$(id).scrollIntoView();
+function mascot(k){const c=k=='pip'?'#2bbf9b':'#7a5cff';const e=k=='pip'?'<path d="M30 20 L38 6 L46 20 Z M54 20 L62 6 L70 20 Z" fill="'+c+'"/>':'<path d="M50 4 L55 16 L68 14 L60 24 L40 24 L32 14 L45 16 Z" fill="#ffd34d"/>';
+return `<svg class="mascot" viewBox="0 0 100 100" role="img" aria-label="${k}">${e}<rect x="14" y="20" width="72" height="68" rx="26" fill="${c}"/><ellipse cx="36" cy="54" rx="9" ry="11" fill="#fff"/><ellipse cx="64" cy="54" rx="9" ry="11" fill="#fff"/><circle cx="38" cy="56" r="5" fill="#12305a"/><circle cx="66" cy="56" r="5" fill="#12305a"/><circle cx="40" cy="53" r="1.8" fill="#fff"/><circle cx="68" cy="53" r="1.8" fill="#fff"/><path d="M42 72 Q50 80 58 72" stroke="#12305a" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="24" cy="66" r="5" fill="#ff9ab5" opacity=".7"/><circle cx="76" cy="66" r="5" fill="#ff9ab5" opacity=".7"/></svg>`}
+document.querySelectorAll('.mascotbox').forEach(b=>b.innerHTML=mascot(b.dataset.m));
+$('heroPair').innerHTML=mascot('pip')+mascot('nova');
+function tog(id,b){const e=$(id);e.classList.toggle('hidden');b.textContent=e.classList.contains('hidden')?b.textContent.replace('Hide','Who’s').replace(/ ✓$/,''):b.textContent}
+
+const dna=[["🔬 Intel 18A","Both are made with Intel’s 18A process, built for strong performance per watt and efficiency."],["🧠 Hybrid cores","Both pair fast Cougar Cove P-cores with Darkmont efficiency cores, so work goes to the right core."],["🎨 Xe3 graphics","Same graphics architecture. Nova has up to 12 Xe cores; Pip has up to 2."],["🤖 NPU 5 AI engine","Both carry Intel’s 5th-gen NPU. Nova’s is up to 50 TOPS, Pip’s up to 17: right-sized."],["⚡ Modern connectivity","Thunderbolt 4, Wi-Fi 7 and Bluetooth 6.0 show up across this generation."],["🔋 Efficiency first","Both are designed around laptops and long battery life."]];
+$('dnaList').innerHTML=dna.map((d,i)=>`<button onclick="this.classList.toggle('on');this.querySelector('small').classList.toggle('hidden')"><b>${d[0]}</b><small class="hidden">${d[1]}</small></button>`).join('');
+
+const M=[["CPU cores",16,6,"16 cores","6 cores","Processing power"],["Xe3 graphics",12,2,"Up to 12","Up to 2","Graphics cores"],["NPU performance",50,17,"50 TOPS","17 TOPS","Dedicated AI engine"],["Platform AI",180,40,"~180 TOPS","~40 TOPS","CPU + GPU + NPU"],["Memory speed",9600,7467,"9600 MT/s","7467 MT/s","Maximum supported speed"]];
+$('bars').innerHTML=`<div class="compare-head"><div></div><div class="chip-head pip-head"><span class="emoji">🌱</span><strong>Pip</strong><small>Intel Core Series 3</small></div><div class="chip-head nova-head"><span class="emoji">🚀</span><strong>Nova</strong><small>Intel Core Ultra Series 3</small></div></div>`+M.map(m=>`<div class="compare-row"><div class="compare-label">${m[0]}<small>${m[5]}</small></div><div class="compare-value"><div class="value-line"><span>${m[4]}</span><small>Pip</small></div><div class="compare-track"><div class="compare-fill pip-fill" data-w="${m[2]/m[1]*100}"></div></div></div><div class="compare-value"><div class="value-line"><span>${m[3]}</span><small>Nova</small></div><div class="compare-track"><div class="compare-fill nova-fill" data-w="100"></div></div></div></div>`).join('')+`<p class="compare-note">💡 <b>Keep in mind:</b> These are “up to” figures for top configurations. Actual performance depends on the laptop design, cooling, memory and workload.</p>`;
+new IntersectionObserver((e,o)=>e.forEach(x=>{if(x.isIntersecting){x.target.querySelectorAll('.compare-fill').forEach(f=>f.style.width=f.dataset.w+'%');o.unobserve(x.target)}}),{threshold:.2}).observe($('bars'));
+const L=[["📚 Notes, browsing, streaming, calls","Perfect fit. Everything runs smoothly and sips power.","Great, and more power than this day needs."],["💻 Coding, many tabs, multitasking","Handles it well. Six cores cover everyday multitasking.","Great, with extra room to grow."],["🎬 Hobby creation: photos, light video, Blender basics","Fine for lighter projects; renders take longer.","Faster renders and exports thanks to far more cores and GPU."],["🎮 Modern games at good settings","Light and older games only; just 2 Xe cores.","Built for this: up to 12 Xe3 cores."],["🧪 Pro video, 3D and local AI models","Not its day; its 17 TOPS NPU is below Copilot+ level.","Right at home: up to 50 NPU TOPS and a 16-core CPU."]];
+function lvl(){const i=+$('lvl').value;$('lvlName').textContent=L[i][0];$('dayStep').textContent=['Everyday','Multitasking','Creative','Gaming','Power user'][i];$('vp').innerHTML='🌱 <b>Pip:</b><br>'+L[i][1];$('vn').innerHTML='🚀 <b>Nova:</b><br>'+L[i][2]}
+$('lvl').oninput=lvl;lvl();
+
+const T=[["Writing an essay with 12 browser tabs open","p","Pip’s six cores handle everyday work happily."],["Playing a big 3D game at high settings","n","That’s what Nova’s up to 12 Xe3 GPU cores are for."],["Streaming shows over Wi-Fi 7","b","Both support modern Wi-Fi 7 connectivity."],["Editing a 4K video timeline","n","Nova’s extra cores and GPU make a big difference here."],["Blurring your background on video calls","p","A right-sized NPU is plenty for everyday AI features."],["Running local AI models for hours","n","Nova’s NPU reaches 50 TOPS, enough for Copilot+ PC features."],["Making your battery last through a long college day","b","Both are built on efficient 18A silicon."],["Plugging in fast storage or a monitor via Thunderbolt 4","b","Both platforms support Thunderbolt 4."]];
+let gi=0,gs=0,lock=false;
+function gShow(){if(gi>=T.length){$('gTask').innerHTML=`🎉 ${gs}/${T.length}!`;$('gFb').innerHTML='Lesson: Pip is right-sized for everyday life, Nova for heavy lifting, and plenty of things work for both.<br><br><button class="btn" onclick="gi=0;gs=0;gShow()">Play again</button> <button class="btn ghost" onclick="go(\'quiz\')">Find my chip →</button>';$('gScore').textContent='';return}
+$('gScore').textContent=`Task ${gi+1} of ${T.length}`;$('gTask').textContent=T[gi][0];$('gFb').textContent='';lock=false}
+function pick(l){if(lock||gi>=T.length)return;lock=true;const t=T[gi],ok=l==t[1];if(ok)gs++;$('gFb').innerHTML=(ok?'✅ Yes! ':'🤔 Not quite. ')+t[2]+'<br><button class="btn ghost" style="margin-top:8px" onclick="gi++;gShow()">Next →</button>'}
+gShow();
+
+const Q=[["What fills most of your laptop time?",[["Notes, browsing, streaming, classes",0,"your day is mostly everyday computing"],["Coding, spreadsheets, lots of multitasking",1,"you multitask a lot"],["Video editing, 3D or design",2,"you create heavy things"]]],
+["How do you game?",[["Barely, or casual and older games",0,"you don’t need a big GPU"],["Esports and lighter titles",1,"you game a bit"],["Modern games at good settings",2,"you want real graphics muscle"]]],
+["Where does AI fit in your life?",[["Chatbots, captions, blur on calls",0,"everyday AI is plenty, so a right-sized NPU suits you"],["Regularly, in several apps",1,"you use AI features often"],["Local models or Copilot+ features",2,"you want top-tier AI power"]]],
+["What matters most when buying?",[["Budget first",0,"affordability matters most"],["A balance of both",1,"you want balance"],["Performance first",2,"performance leads your decision"]]],
+["How packed is your screen?",[["A few windows",0,"you keep things simple"],["Lots of apps and tabs",1,"you run many things at once"],["A pro timeline and a dozen tools",2,"you push your machine hard"]]]];
+let qi=0,qs=0,qr=[];
+function qShow(){if(qi>=Q.length)return qEnd();const q=Q[qi];$('qbox').innerHTML=`<div class="prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${qi+1}. ${q[0]}</h3>`+q[1].map((o,i)=>`<button class="opt" onclick="qa(${i})">${o[0]}</button>`).join('')}
+function qa(i){const o=Q[qi][1][i];qs+=o[1];qr.push(o[2]);qi++;qShow()}
+function qEnd(){const pct=qs/10*100;let k,t,d;
+if(qs<=3){k='pip';t='You’re a Pip person! 🌱';d='Intel Core Series 3 fits your day: modern 18A efficiency, up to 6 cores, Xe3 graphics and a right-sized NPU, without paying for power you won’t use.'}
+else if(qs>=7){k='nova';t='You’re a Nova person! 🚀';d='Intel Core Ultra Series 3 fits your day: up to 16 cores, up to 12 Xe3 GPU cores and an NPU of up to 50 TOPS for creating, gaming and heavy AI.'}
+else{k='both';t='You’re in the middle! 🤝';d='Either could be right. Pip if budget leads, Nova if you want room to grow. Check the price of the actual laptop you’re eyeing.'}
+const txt=`I took the Pip & Nova quiz: ${t.replace(/[🌱🚀🤝]/g,'').trim()} (Intel Core ${k=='nova'?'Ultra ':''}Series 3). Try it!`;
+$('qbox').innerHTML=`<div class="res">${k=='both'?mascot('pip')+mascot('nova'):mascot(k)}<h2>${t}</h2><p>${d}</p>
+<div class="meter"><b style="left:0" id="pin">📍</b></div><div style="display:flex;justify-content:space-between;font-size:13px" class="score"><span>🌱 Pip</span><span>Nova 🚀</span></div>
+<h3>Why?</h3><ul>${qr.map(r=>'<li>You said '+r+'.</li>').join('')}</ul>
+<p class="score">Neither chip is the “better” one. The right one is the one that matches your day.</p>
+<button class="btn" onclick="navigator.clipboard&&navigator.clipboard.writeText('${txt.replace(/'/g,"\\'")}').then(()=>this.textContent='Copied! ✅').catch(()=>{})">📋 Copy to share</button> <button class="btn ghost" onclick="qi=0;qs=0;qr=[];qShow()">Retake</button></div>`;
+requestAnimationFrame(()=>setTimeout(()=>$('pin').style.left=Math.max(4,Math.min(96,pct))+'%',60))}
+qShow();
+</script></body></html>
